@@ -23,7 +23,7 @@ export const Navbar = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <h1 className="text-2xl font-bold text-blue-600">
-              <Link to="/">MediTime</Link>
+              <Link to="/">thee Healthy living</Link>
             </h1>
           </div>
 
