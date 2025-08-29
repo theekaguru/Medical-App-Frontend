@@ -216,7 +216,7 @@ export const Login = () => {
                     to="/register"
                     className="text-[#093FB4] hover:text-blue-700 font-semibold hover:underline transition-colors duration-200"
                   >
-                    Sign up here
+                    Register here
                   </Link>
                 </p>
               </div>
