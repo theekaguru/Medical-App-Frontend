@@ -13,6 +13,7 @@ export const Error: React.FC<ErrorProps> = ({
   message = 'An unexpected error occurred. Please try again later.',
   onRetry,
   onHomeClick,
+  
 }) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-red-50 p-6">
