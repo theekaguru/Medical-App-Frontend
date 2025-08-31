@@ -21,17 +21,26 @@ interface SidebarProps {
   setIsOpen: (open: boolean) => void;
 }
 
+interface MenuItem {
+  name: string;
+  path: string;
+  icon: any;
+  color: string;
+  exact?: boolean;
+}
+
 export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
   const { pathname } = useLocation();
   const { user } = useSelector((state: RootState) => state.auth);
   const role = user?.role || "user";
 
-  const baseLinks = {
+  const baseLinks: Record<string, MenuItem> = {
     dashboard: {
       name: "Dashboard",
       path: role === "doctor" ? "/doctor-dashboard" : "/user-dashboard",
       icon: Home,
       color: "from-[#093FB4] to-[#093FB4]",
+      exact: true
     },
     appointment: {
       name: "Appointments",
@@ -71,6 +80,7 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
       path: "/browse-doctors",
       icon: Search,
       color: "from-purple-500 to-purple-600",
+      exact: true
     },
     medicalHistory: {
       name: "Medical History",
@@ -84,11 +94,10 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
       icon: Users,
       color: "from-green-500 to-green-600"
     }
-
   };
 
-  const adminMenuItems = [
-    { name: "Dashboard", path: "/dashboard", icon: Home, color: "from-[#093FB4] to-[#093FB4]" },
+  const adminMenuItems: MenuItem[] = [
+    { name: "Dashboard", path: "/dashboard", icon: Home, color: "from-[#093FB4] to-[#093FB4]", exact: true },
     { name: "Doctors", path: "/dashboard/doctors", icon: BookOpen, color: "from-teal-500 to-teal-600" },
     { name: "Complaints", path: "/dashboard/complaints", icon: Package, color: "from-orange-500 to-orange-600" },
     { name: "Users", path: "/dashboard/users", icon: Users, color: "from-purple-500 to-purple-600" },
@@ -99,7 +108,7 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
     { name: "Doctor Availability", path: "/dashboard/doctor-availability", icon: Calendar, color: "from-indigo-500 to-indigo-600" },
   ];
 
-  const userMenuItems = [
+  const userMenuItems: MenuItem[] = [
     baseLinks.dashboard,
     baseLinks.appointment,
     baseLinks.prescription,
@@ -109,14 +118,14 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
     baseLinks.medicalHistory,
   ];
 
-  const doctorMenuItems = [
+  const doctorMenuItems: MenuItem[] = [
     baseLinks.dashboard,
     baseLinks.appointment,
     baseLinks.prescription,
     baseLinks.patients,
   ];
 
-  const menuItems =
+  const menuItems: MenuItem[] =
     role === "admin"
       ? adminMenuItems
       : role === "doctor"
@@ -130,6 +139,18 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
       : role === "doctor"
       ? "Doctor Panel"
       : "User Dashboard";
+
+  // Improved active path detection
+  const isActivePath = (path: string, exact: boolean = false) => {
+    if (exact) {
+      return pathname === path;
+    }
+    
+    // For non-exact paths, check if current path starts with the menu path
+    // but also ensure we're not matching partial paths
+    return pathname === path || 
+           (pathname.startsWith(path + "/") && pathname.charAt(path.length) === '/');
+  };
 
   return (
     <>
@@ -164,12 +185,10 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
           </button>
         </div>
 
-
         {/* Navigation */}
         <nav className="flex flex-col mt-8 px-4 space-y-2 pb-6">
-          {menuItems.map(({ name, path, icon: Icon, color }) => {
-            const isActive =
-              pathname === path || pathname.startsWith(path + "/");
+          {menuItems.map(({ name, path, icon: Icon, color, exact }) => {
+            const isActive = isActivePath(path, exact);
 
             return (
               <NavLink
