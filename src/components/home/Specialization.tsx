@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Heart, Brain, Eye, Bone, Baby, Stethoscope } from 'lucide-react';
 import { specializationApi } from '../../feature/api/specializationApi';
+import { Link } from "react-router-dom";
 
 const iconMap: Record<string, any> = {
   Cardiologist: Heart,
@@ -41,9 +42,11 @@ export const Specialization = () => {
             Explore a wide range of healthcare services, each designed with expert care and supported by highly qualified professionals.
           </p>
           <div className="flex items-center">
+            <Link to="/register">
             <button className="inline-flex items-center justify-center h-12 px-6 mr-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-blue-800 hover:bg-blue-900 focus:shadow-outline focus:outline-none">
               Get started
             </button>
+          </Link>
             <a
               href="/"
               className="inline-flex items-center font-semibold text-blue-800 transition-colors duration-200 hover:text-blue-900"
